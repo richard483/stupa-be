@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @Entity
-@Table(name = "class_room")
+@Table(name = "class_room", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"school_name", "class_grade", "class_year"})
+})
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClassRoom {
