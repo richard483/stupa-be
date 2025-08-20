@@ -59,13 +59,13 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public LoginResponse login(LoginRequest loginRequest) {
-    User user = userRepository.findFirstByEmail(loginRequest.getUsername());
+    User user = userRepository.findFirstByEmail(loginRequest.getEmail());
     if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-      throw new BusinessException("Login failed", "Wrong username or password");
+      throw new BusinessException("Login failed", "Wrong email or password");
     }
 
     Authentication authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+        new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
             loginRequest.getPassword()));
 
     SecurityContextHolder.getContext().setAuthentication(authentication);

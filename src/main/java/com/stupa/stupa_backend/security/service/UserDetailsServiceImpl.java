@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     User user = userRepository.findFirstByEmail(username);
     if (user == null) {
       throw new UsernameNotFoundException(
-          "#loadUserByUsername - User Not Found with username: " + username);
+          "#loadUserByUsername - User Not Found with email: " + username);
     }
     return UserDetailsImpl.build(user);
   }
