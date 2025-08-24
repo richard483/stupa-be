@@ -68,8 +68,7 @@ public class WebSecurityConfig {
         .authorizeHttpRequests(auth ->
             auth.requestMatchers("/user/**").permitAll()
                 .requestMatchers(SWAGGER_UI_PATHS).permitAll()
-                .requestMatchers("/promo/evaluate").permitAll()
-                .requestMatchers("/promo/callback-promo-usage").permitAll()
+                .requestMatchers("/school/*").permitAll()
                 .anyRequest().authenticated()
         );
 
