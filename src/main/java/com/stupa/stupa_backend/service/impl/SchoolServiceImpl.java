@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +28,9 @@ public class SchoolServiceImpl implements SchoolService {
 
   @Override
   public List<School> getAllSchoolByNameStartWith(String startWith) {
+    Limit limit = Limit.of(10);
     Sort sort = Sort.by(Sort.Direction.ASC, "name");
-    return schoolRepository.findAllByNameStartingWithIgnoreCase(startWith, sort);
+    return schoolRepository.findAllByNameStartingWithIgnoreCase(startWith, sort, limit);
   }
 }
 
