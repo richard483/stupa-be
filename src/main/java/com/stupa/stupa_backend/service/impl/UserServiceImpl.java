@@ -6,11 +6,15 @@ import com.stupa.stupa_backend.dto.request.RegisterRequest;
 import com.stupa.stupa_backend.dto.response.LoginResponse;
 import com.stupa.stupa_backend.exception.BusinessException;
 import com.stupa.stupa_backend.model.ClassRoom;
+import com.stupa.stupa_backend.model.School;
 import com.stupa.stupa_backend.model.User;
 import com.stupa.stupa_backend.model.enums.Role;
 import com.stupa.stupa_backend.repository.UserRepository;
 import com.stupa.stupa_backend.security.jwt.JWTUtil;
+import com.stupa.stupa_backend.service.ClassRoomService;
+import com.stupa.stupa_backend.service.SchoolService;
 import com.stupa.stupa_backend.service.UserService;
+import jakarta.transaction.Transactional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +30,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+  private final SchoolService schoolService;
+  private final ClassRoomService classRoomService;
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;
@@ -89,12 +95,21 @@ public class UserServiceImpl implements UserService {
     if (classRoom != null) {
       LoginResponse.ClassRoomDetail classRoomDetail = LoginResponse.ClassRoomDetail.builder()
           .id(classRoom.getId())
-          .schoolName(classRoom.getSchoolName())
-          .classGrade(classRoom.getClassGrade())
-          .classYear(classRoom.getClassYear())
+          .grade(classRoom.getGrade())
+          .year(classRoom.getYear())
           .build();
-
       loginResponseBuilder.classRoom(classRoomDetail);
+
+      School school = classRoom.getSchool();
+
+      if (school != null) {
+        LoginResponse.SchoolDetail schoolDetail = LoginResponse.SchoolDetail.builder()
+            .id(school.getId())
+            .name(school.getName())
+            .description(school.getDescription())
+            .build();
+        loginResponseBuilder.school(schoolDetail);
+      }
     }
 
     return LoginResponse.builder()
@@ -103,15 +118,24 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public ClassRoom createClassRoomAndBindToTeacherId(
       CreateClassRoomAndBindToTeacherIdRequest createClassRoomAndBindToTeacherIdRequest) {
-    ClassRoom classRoom = ClassRoom.builder()
-        .schoolName(createClassRoomAndBindToTeacherIdRequest.getSchoolName())
-        .classGrade(createClassRoomAndBindToTeacherIdRequest.getClassGrade())
-        .classYear(createClassRoomAndBindToTeacherIdRequest.getClassYear())
+    School schoolRequest = School.builder()
+        .name(createClassRoomAndBindToTeacherIdRequest.getSchoolName())
         .build();
-    User teacher = userRepository.findById(
-            UUID.fromString(createClassRoomAndBindToTeacherIdRequest.getTeacherId()))
+    School school = schoolService.save(schoolRequest);
+
+    ClassRoom classRoomRequest = ClassRoom.builder()
+        .school(school)
+        .grade(createClassRoomAndBindToTeacherIdRequest.getClassGrade())
+        .year(createClassRoomAndBindToTeacherIdRequest.getClassYear())
+        .build();
+
+    ClassRoom classRoom = classRoomService.save(classRoomRequest);
+
+    User teacher = userRepository.findByIdAndRoleIs(
+            UUID.fromString(createClassRoomAndBindToTeacherIdRequest.getTeacherId()), Role.TEACHER)
         .orElseThrow(() -> new BusinessException("TEACHER_NOT_FOUND",
             "Teacher with ID " + createClassRoomAndBindToTeacherIdRequest.getTeacherId()
                 + " not found."));

@@ -12,6 +12,7 @@ public class LoginResponse {
   private String token;
   private UserDetail user;
   private ClassRoomDetail classRoom;
+  private SchoolDetail school;
 
   @Data
   @Builder
@@ -27,9 +28,17 @@ public class LoginResponse {
   public static class ClassRoomDetail {
 
     private UUID id;
-    private String schoolName;
-    private String classGrade;
-    private String classYear;
+    private String grade;
+    private String year;
+  }
+
+  @Data
+  @Builder
+  public static class SchoolDetail {
+
+    private UUID id;
+    private String name;
+    private String description;
   }
 
 }
