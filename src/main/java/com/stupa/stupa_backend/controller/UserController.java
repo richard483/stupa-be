@@ -42,7 +42,7 @@ public class UserController {
         .build());
   }
 
-  @PostMapping("/create-classroom")
+  @PostMapping("/bind-classroom")
   public ResponseEntity<BaseResponse<ClassRoom>> createClassRoomAndBindToTeacherId(
       @Valid @RequestBody CreateClassRoomAndBindToTeacherIdRequest createClassRoomRequest) {
     log.info("#createClassRoomAndBindToTeacherId - creating classroom with request: {}",
