@@ -61,8 +61,10 @@ public class UserServiceImpl implements UserService {
   public LoginResponse login(LoginRequest loginRequest) {
     User user = userRepository.findFirstByEmail(loginRequest.getEmail());
     if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-      throw new BusinessException("Login failed", "Wrong email or password");
+      throw new BusinessException("Login failed", "User not found or invalid credentials");
     }
+
+    LoginResponse.LoginResponseBuilder loginResponseBuilder = LoginResponse.builder();
 
     Authentication authentication = authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
@@ -72,11 +74,28 @@ public class UserServiceImpl implements UserService {
     String jwt = jwtUtils.generateJwtToken(authentication);
     log.info("#login - Generated JWT for user: {}", user.getId());
 
+    loginResponseBuilder.token(jwt);
+
     LoginResponse.UserDetail userDetail = LoginResponse.UserDetail.builder()
         .id(user.getId())
         .email(user.getEmail())
         .role(user.getRole())
         .build();
+
+    loginResponseBuilder.user(userDetail);
+
+    ClassRoom classRoom = user.getClassRoom();
+
+    if (classRoom != null) {
+      LoginResponse.ClassRoomDetail classRoomDetail = LoginResponse.ClassRoomDetail.builder()
+          .id(classRoom.getId())
+          .schoolName(classRoom.getSchoolName())
+          .classGrade(classRoom.getClassGrade())
+          .classYear(classRoom.getClassYear())
+          .build();
+
+      loginResponseBuilder.classRoom(classRoomDetail);
+    }
 
     return LoginResponse.builder()
         .token(jwt)
