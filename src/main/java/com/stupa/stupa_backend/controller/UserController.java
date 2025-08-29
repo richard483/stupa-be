@@ -4,8 +4,8 @@ import com.stupa.stupa_backend.dto.request.CreateClassRoomAndBindToTeacherIdRequ
 import com.stupa.stupa_backend.dto.request.LoginRequest;
 import com.stupa.stupa_backend.dto.request.RegisterRequest;
 import com.stupa.stupa_backend.dto.response.BaseResponse;
+import com.stupa.stupa_backend.dto.response.BindClassroomResponse;
 import com.stupa.stupa_backend.dto.response.LoginResponse;
-import com.stupa.stupa_backend.model.ClassRoom;
 import com.stupa.stupa_backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,11 +43,11 @@ public class UserController {
   }
 
   @PostMapping("/bind-classroom")
-  public ResponseEntity<BaseResponse<ClassRoom>> createClassRoomAndBindToTeacherId(
+  public ResponseEntity<BaseResponse<BindClassroomResponse>> createClassRoomAndBindToTeacherId(
       @Valid @RequestBody CreateClassRoomAndBindToTeacherIdRequest createClassRoomRequest) {
     log.info("#createClassRoomAndBindToTeacherId - creating classroom with request: {}",
         createClassRoomRequest);
-    return ResponseEntity.ok(BaseResponse.<ClassRoom>builder()
+    return ResponseEntity.ok(BaseResponse.<BindClassroomResponse>builder()
         .data(userService.createClassRoomAndBindToTeacherId(createClassRoomRequest))
         .build());
   }

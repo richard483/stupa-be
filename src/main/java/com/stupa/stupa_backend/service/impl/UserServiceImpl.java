@@ -1,8 +1,12 @@
 package com.stupa.stupa_backend.service.impl;
 
+import com.stupa.stupa_backend.dto.ClassRoomDTO;
+import com.stupa.stupa_backend.dto.SchoolDTO;
+import com.stupa.stupa_backend.dto.UserDTO;
 import com.stupa.stupa_backend.dto.request.CreateClassRoomAndBindToTeacherIdRequest;
 import com.stupa.stupa_backend.dto.request.LoginRequest;
 import com.stupa.stupa_backend.dto.request.RegisterRequest;
+import com.stupa.stupa_backend.dto.response.BindClassroomResponse;
 import com.stupa.stupa_backend.dto.response.LoginResponse;
 import com.stupa.stupa_backend.exception.BusinessException;
 import com.stupa.stupa_backend.model.ClassRoom;
@@ -112,14 +116,12 @@ public class UserServiceImpl implements UserService {
       }
     }
 
-    return LoginResponse.builder()
-        .token(jwt)
-        .user(userDetail).build();
+    return loginResponseBuilder.build();
   }
 
   @Override
   @Transactional
-  public ClassRoom createClassRoomAndBindToTeacherId(
+  public BindClassroomResponse createClassRoomAndBindToTeacherId(
       CreateClassRoomAndBindToTeacherIdRequest createClassRoomAndBindToTeacherIdRequest) {
     School schoolRequest = School.builder()
         .name(createClassRoomAndBindToTeacherIdRequest.getSchoolName())
@@ -142,7 +144,33 @@ public class UserServiceImpl implements UserService {
     teacher.setClassRoom(classRoom);
 
     try {
-      return userRepository.save(teacher).getClassRoom();
+      User bindUser = userRepository.save(teacher);
+
+      ClassRoomDTO classRoomDTO = ClassRoomDTO.builder()
+          .id(classRoom.getId())
+          .grade(classRoom.getGrade())
+          .year(classRoom.getYear())
+          .build();
+
+      SchoolDTO schoolDTO = SchoolDTO.builder()
+          .id(school.getId())
+          .name(school.getName())
+          .description(school.getDescription())
+          .build();
+
+      UserDTO userDTO = UserDTO.builder()
+          .id(bindUser.getId())
+          .email(bindUser.getEmail())
+          .fullName(bindUser.getFullName())
+          .phoneNumber(bindUser.getPhoneNumber())
+          .role(bindUser.getRole())
+          .build();
+
+      return BindClassroomResponse.builder()
+          .classRoom(classRoomDTO)
+          .school(schoolDTO)
+          .teacher(userDTO)
+          .build();
     } catch (Exception e) {
       log.error("Error creating class room: {}", e.getMessage(), e);
       if (e.getMessage().contains("duplicate")) {
