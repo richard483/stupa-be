@@ -62,6 +62,11 @@ public class ImageServiceImpl implements ImageService {
         .orElseThrow(() -> new BusinessException("USERNAME_NOT_FOUND",
             "#getProfilePicture - User not found with id: " + userId));
 
+    Image profilePicture = user.getProfilePicture();
+    if (profilePicture == null) {
+      return null;
+    }
+    
     Optional<Image> dbImage = imageRepository.findById(user.getProfilePicture().getId());
     return dbImage.map(image -> ImageUtil.decompressImage(image.getImageData()))
         .orElse(null);
