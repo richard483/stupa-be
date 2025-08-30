@@ -6,6 +6,7 @@ import com.stupa.stupa_backend.dto.UserDTO;
 import com.stupa.stupa_backend.dto.request.CreateClassRoomAndBindToTeacherIdRequest;
 import com.stupa.stupa_backend.dto.request.LoginRequest;
 import com.stupa.stupa_backend.dto.request.RegisterRequest;
+import com.stupa.stupa_backend.dto.request.UpdateUserRequest;
 import com.stupa.stupa_backend.dto.response.BindClassroomResponse;
 import com.stupa.stupa_backend.dto.response.LoginResponse;
 import com.stupa.stupa_backend.exception.BusinessException;
@@ -198,6 +199,36 @@ public class UserServiceImpl implements UserService {
             .build())
         .orElseThrow(
             () -> new BusinessException("USER_NOT_FOUND", "User not found", HttpStatus.NOT_FOUND));
+  }
+
+  @Override
+  public UserDTO updateUserInformation(UpdateUserRequest updateRequest) {
+    User user = userRepository.findById(AuthUtil.getCurrentUserId())
+        .orElseThrow(
+            () -> new BusinessException("USER_NOT_FOUND", "User not found", HttpStatus.NOT_FOUND));
+
+    if (!updateRequest.getEmail().isEmpty()) {
+      user.setEmail(updateRequest.getEmail());
+    }
+    if (!updateRequest.getFullName().isEmpty()) {
+      user.setFullName(updateRequest.getFullName());
+    }
+    if (!updateRequest.getPhoneNumber().isEmpty()) {
+      user.setPhoneNumber(updateRequest.getPhoneNumber());
+    }
+    if (updateRequest.getBirthDate() != null) {
+      user.setBirthDate(updateRequest.getBirthDate());
+    }
+    User updatedUser = userRepository.save(user);
+
+    return UserDTO.builder()
+        .id(updatedUser.getId())
+        .email(updatedUser.getEmail())
+        .fullName(updatedUser.getFullName())
+        .phoneNumber(updatedUser.getPhoneNumber())
+        .birthDate(updatedUser.getBirthDate())
+        .role(updatedUser.getRole())
+        .build();
   }
 
   private String hashPassword(String password) {

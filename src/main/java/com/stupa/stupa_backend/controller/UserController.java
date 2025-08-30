@@ -4,6 +4,7 @@ import com.stupa.stupa_backend.dto.UserDTO;
 import com.stupa.stupa_backend.dto.request.CreateClassRoomAndBindToTeacherIdRequest;
 import com.stupa.stupa_backend.dto.request.LoginRequest;
 import com.stupa.stupa_backend.dto.request.RegisterRequest;
+import com.stupa.stupa_backend.dto.request.UpdateUserRequest;
 import com.stupa.stupa_backend.dto.response.BaseResponse;
 import com.stupa.stupa_backend.dto.response.BindClassroomResponse;
 import com.stupa.stupa_backend.dto.response.LoginResponse;
@@ -54,11 +55,21 @@ public class UserController {
         .build());
   }
 
-  @GetMapping("/")
-  public ResponseEntity<BaseResponse<UserDTO>> getCurrentUser() {
+  @GetMapping("/profile")
+  public ResponseEntity<BaseResponse<UserDTO>> getCurrentUserProfile() {
     log.info("#getCurrentUser - getting current user information");
     return ResponseEntity.ok(BaseResponse.<UserDTO>builder()
         .data(userService.getCurrentUser())
+        .build());
+  }
+
+  @PostMapping("/profile")
+  public ResponseEntity<BaseResponse<UserDTO>> updateCurrentUserProfile(@RequestBody
+  UpdateUserRequest updateUserRequest) {
+    log.info("#updateCurrentUserProfile - updating current user information with request: {}",
+        updateUserRequest);
+    return ResponseEntity.ok(BaseResponse.<UserDTO>builder()
+        .data(userService.updateUserInformation(updateUserRequest))
         .build());
   }
 

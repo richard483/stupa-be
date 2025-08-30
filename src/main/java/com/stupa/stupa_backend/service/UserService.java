@@ -4,6 +4,7 @@ import com.stupa.stupa_backend.dto.UserDTO;
 import com.stupa.stupa_backend.dto.request.CreateClassRoomAndBindToTeacherIdRequest;
 import com.stupa.stupa_backend.dto.request.LoginRequest;
 import com.stupa.stupa_backend.dto.request.RegisterRequest;
+import com.stupa.stupa_backend.dto.request.UpdateUserRequest;
 import com.stupa.stupa_backend.dto.response.BindClassroomResponse;
 import com.stupa.stupa_backend.dto.response.LoginResponse;
 import com.stupa.stupa_backend.model.User;
@@ -18,4 +19,6 @@ public interface UserService {
       CreateClassRoomAndBindToTeacherIdRequest createClassRoomAndBindToTeacherIdRequest);
 
   UserDTO getCurrentUser();
+
+  UserDTO updateUserInformation(UpdateUserRequest userDTO);
 }
