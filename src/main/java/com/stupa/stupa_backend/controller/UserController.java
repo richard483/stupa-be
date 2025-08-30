@@ -1,5 +1,6 @@
 package com.stupa.stupa_backend.controller;
 
+import com.stupa.stupa_backend.dto.UserDTO;
 import com.stupa.stupa_backend.dto.request.CreateClassRoomAndBindToTeacherIdRequest;
 import com.stupa.stupa_backend.dto.request.LoginRequest;
 import com.stupa.stupa_backend.dto.request.RegisterRequest;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +51,14 @@ public class UserController {
         createClassRoomRequest);
     return ResponseEntity.ok(BaseResponse.<BindClassroomResponse>builder()
         .data(userService.createClassRoomAndBindToTeacherId(createClassRoomRequest))
+        .build());
+  }
+
+  @GetMapping("/")
+  public ResponseEntity<BaseResponse<UserDTO>> getCurrentUser() {
+    log.info("#getCurrentUser - getting current user information");
+    return ResponseEntity.ok(BaseResponse.<UserDTO>builder()
+        .data(userService.getCurrentUser())
         .build());
   }
 

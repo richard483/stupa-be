@@ -18,10 +18,12 @@ import com.stupa.stupa_backend.security.jwt.JWTUtil;
 import com.stupa.stupa_backend.service.ClassRoomService;
 import com.stupa.stupa_backend.service.SchoolService;
 import com.stupa.stupa_backend.service.UserService;
+import com.stupa.stupa_backend.util.AuthUtil;
 import jakarta.transaction.Transactional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -181,6 +183,21 @@ public class UserServiceImpl implements UserService {
       throw new BusinessException("CLASSROOM_REPOSITORY_ERROR",
           "Failed to create class room due to an unexpected error.");
     }
+  }
+
+  @Override
+  public UserDTO getCurrentUser() {
+    return userRepository.findById(AuthUtil.getCurrentUserId())
+        .map(user -> UserDTO.builder()
+            .id(user.getId())
+            .email(user.getEmail())
+            .fullName(user.getFullName())
+            .phoneNumber(user.getPhoneNumber())
+            .birthDate(user.getBirthDate())
+            .role(user.getRole())
+            .build())
+        .orElseThrow(
+            () -> new BusinessException("USER_NOT_FOUND", "User not found", HttpStatus.NOT_FOUND));
   }
 
   private String hashPassword(String password) {
