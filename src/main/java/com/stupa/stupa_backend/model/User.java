@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.Date;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,6 +45,8 @@ public class User {
   private String fullName;
 
   private String phoneNumber;
+
+  private Date birthDate;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)

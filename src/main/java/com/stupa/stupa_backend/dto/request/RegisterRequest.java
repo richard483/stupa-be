@@ -3,6 +3,7 @@ package com.stupa.stupa_backend.dto.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.stupa.stupa_backend.model.enums.Role;
 import jakarta.validation.constraints.NotBlank;
+import java.util.Date;
 import lombok.Data;
 
 @Data
@@ -18,4 +19,5 @@ public class RegisterRequest {
   private String phoneNumber;
   @NotBlank(message = "Role is required")
   private Role role;
+  private Date birthDate;
 }

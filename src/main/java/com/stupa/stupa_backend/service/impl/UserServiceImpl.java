@@ -164,6 +164,7 @@ public class UserServiceImpl implements UserService {
           .fullName(bindUser.getFullName())
           .phoneNumber(bindUser.getPhoneNumber())
           .role(bindUser.getRole())
+          .birthDate(bindUser.getBirthDate())
           .build();
 
       return BindClassroomResponse.builder()

@@ -1,6 +1,7 @@
 package com.stupa.stupa_backend.dto;
 
 import com.stupa.stupa_backend.model.enums.Role;
+import java.util.Date;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
@@ -13,5 +14,6 @@ public class UserDTO {
   private String email;
   private String fullName;
   private String phoneNumber;
+  private Date birthDate;
   private Role role;
 }
