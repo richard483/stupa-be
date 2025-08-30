@@ -207,13 +207,13 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(
             () -> new BusinessException("USER_NOT_FOUND", "User not found", HttpStatus.NOT_FOUND));
 
-    if (!updateRequest.getEmail().isEmpty()) {
+    if (updateRequest.getEmail() != null) {
       user.setEmail(updateRequest.getEmail());
     }
-    if (!updateRequest.getFullName().isEmpty()) {
+    if (updateRequest.getFullName() != null) {
       user.setFullName(updateRequest.getFullName());
     }
-    if (!updateRequest.getPhoneNumber().isEmpty()) {
+    if (updateRequest.getPhoneNumber() != null) {
       user.setPhoneNumber(updateRequest.getPhoneNumber());
     }
     if (updateRequest.getBirthDate() != null) {
