@@ -47,15 +47,15 @@ public class ImageController {
   }
 
   @GetMapping("/profile-picture")
-  public ResponseEntity<BaseResponse<byte[]>> getProfilePicture() {
+  public ResponseEntity<BaseResponse<?>> getProfilePicture() {
     byte[] imageData = imageService.getProfilePicture();
     if (imageData != null) {
       return ResponseEntity.status(HttpStatus.OK)
           .body(BaseResponse.<byte[]>builder()
               .data(imageData).build());
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BaseResponse.<byte[]>builder()
-          .data("Image not found".getBytes()).build());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BaseResponse.<String>builder()
+          .data("Image not found").build());
     }
   }
 }
