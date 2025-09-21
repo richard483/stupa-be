@@ -21,6 +21,7 @@ public class LoginResponse {
     private UUID id;
     private String email;
     private Role role;
+    private String name;
   }
 
   @Data
