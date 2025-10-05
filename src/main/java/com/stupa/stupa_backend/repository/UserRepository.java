@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
   User findFirstByEmail(@NotBlank(message = "Email is required") String email);
 
   Optional<User> findByIdAndRoleIs(UUID id, Role role);
+
+  Optional<User> findByEmailAndRoleIs(String email, Role role);
 }

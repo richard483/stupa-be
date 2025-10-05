@@ -10,8 +10,8 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AddStudentToClassroomRequest {
 
-  @NotBlank(message = "Student Id is required")
-  private String studentId;
+  @NotBlank(message = "Student email is required")
+  private String studentEmail;
 
   @NotBlank(message = "Classroom Id is required")
   private String classroomId;

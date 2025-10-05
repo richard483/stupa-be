@@ -236,15 +236,17 @@ public class UserServiceImpl implements UserService {
   @Override
   public void addStudentToClassroom(
       AddStudentToClassroomRequest addStudentToClassroomRequest) {
-    User student = userRepository.findByIdAndRoleIs(
-            UUID.fromString(addStudentToClassroomRequest.getStudentId()), Role.STUDENT)
+    User student = userRepository.findByEmailAndRoleIs(
+            addStudentToClassroomRequest.getStudentEmail(), Role.STUDENT)
         .orElseThrow(() -> new BusinessException("STUDENT_NOT_FOUND",
-            "Student with ID " + addStudentToClassroomRequest.getStudentId() + " not found."));
+            "Student with email " + addStudentToClassroomRequest.getStudentEmail()
+                + " not found."));
     ClassRoom classRoom = classRoomService.findById(
             UUID.fromString(addStudentToClassroomRequest.getClassroomId()))
         .orElseThrow(() -> new BusinessException("CLASSROOM_NOT_FOUND",
             "Classroom with ID " + addStudentToClassroomRequest.getClassroomId() + " not found."));
     student.setClassRoom(classRoom);
+    userRepository.save(student);
   }
 
   private String hashPassword(String password) {
