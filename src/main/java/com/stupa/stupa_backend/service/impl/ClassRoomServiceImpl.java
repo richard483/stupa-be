@@ -4,6 +4,8 @@ import com.stupa.stupa_backend.model.ClassRoom;
 import com.stupa.stupa_backend.repository.ClassRoomRepository;
 import com.stupa.stupa_backend.service.ClassRoomService;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,11 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     return classRoomRepository.findFirstBySchoolIdAndGradeAndYear(classRoom.getSchool().getId(),
             classRoom.getGrade(), classRoom.getYear())
         .orElseGet(() -> classRoomRepository.save(classRoom));
+  }
+
+  @Override
+  public Optional<ClassRoom> findById(UUID uuid) {
+    return classRoomRepository.findById(uuid);
   }
 }
 

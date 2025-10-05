@@ -1,6 +1,7 @@
 package com.stupa.stupa_backend.controller;
 
 import com.stupa.stupa_backend.dto.UserDTO;
+import com.stupa.stupa_backend.dto.request.AddStudentToClassroomRequest;
 import com.stupa.stupa_backend.dto.request.CreateClassRoomAndBindToTeacherIdRequest;
 import com.stupa.stupa_backend.dto.request.LoginRequest;
 import com.stupa.stupa_backend.dto.request.RegisterRequest;
@@ -70,6 +71,17 @@ public class UserController {
         updateUserRequest);
     return ResponseEntity.ok(BaseResponse.<UserDTO>builder()
         .data(userService.updateUserInformation(updateUserRequest))
+        .build());
+  }
+
+  @PostMapping("/add-student-to-classroom")
+  public ResponseEntity<BaseResponse<String>> addStudentToClassRoom(
+      @Valid @RequestBody AddStudentToClassroomRequest addStudentToClassroomRequest) {
+    log.info("#addStudentToClassRoom - adding student to classroom with request: {}",
+        addStudentToClassroomRequest);
+    userService.addStudentToClassroom(addStudentToClassroomRequest);
+    return ResponseEntity.ok(BaseResponse.<String>builder()
+        .data("Student added to classroom successfully")
         .build());
   }
 

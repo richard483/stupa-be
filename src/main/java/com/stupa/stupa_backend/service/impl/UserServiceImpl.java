@@ -3,6 +3,7 @@ package com.stupa.stupa_backend.service.impl;
 import com.stupa.stupa_backend.dto.ClassRoomDTO;
 import com.stupa.stupa_backend.dto.SchoolDTO;
 import com.stupa.stupa_backend.dto.UserDTO;
+import com.stupa.stupa_backend.dto.request.AddStudentToClassroomRequest;
 import com.stupa.stupa_backend.dto.request.CreateClassRoomAndBindToTeacherIdRequest;
 import com.stupa.stupa_backend.dto.request.LoginRequest;
 import com.stupa.stupa_backend.dto.request.RegisterRequest;
@@ -230,6 +231,20 @@ public class UserServiceImpl implements UserService {
         .birthDate(updatedUser.getBirthDate())
         .role(updatedUser.getRole())
         .build();
+  }
+
+  @Override
+  public void addStudentToClassroom(
+      AddStudentToClassroomRequest addStudentToClassroomRequest) {
+    User student = userRepository.findByIdAndRoleIs(
+            UUID.fromString(addStudentToClassroomRequest.getStudentId()), Role.STUDENT)
+        .orElseThrow(() -> new BusinessException("STUDENT_NOT_FOUND",
+            "Student with ID " + addStudentToClassroomRequest.getStudentId() + " not found."));
+    ClassRoom classRoom = classRoomService.findById(
+            UUID.fromString(addStudentToClassroomRequest.getClassroomId()))
+        .orElseThrow(() -> new BusinessException("CLASSROOM_NOT_FOUND",
+            "Classroom with ID " + addStudentToClassroomRequest.getClassroomId() + " not found."));
+    student.setClassRoom(classRoom);
   }
 
   private String hashPassword(String password) {
